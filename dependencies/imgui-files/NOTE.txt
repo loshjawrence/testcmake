@@ -1,0 +1,2 @@
+copy the cpp/h files from imgui root to here
+copy the cpp/h for glfw and opengl3 from <imgui root>/examples folder

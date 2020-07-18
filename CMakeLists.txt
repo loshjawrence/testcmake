@@ -38,52 +38,62 @@ cmake_print_variables(OPENGL_INCLUDE_DIRS)
 
 add_subdirectory(dependencies)
 
-list(APPEND SOURCES_PROJECT
-    src/main.cpp
+#############################################################
+########################   IMGUI   ##########################
+#############################################################
+# If this doesn't work just add to project sources
+set(IMGUI_FILE_DIR "${PROJECT_SOURCE_DIR}/dependencies/imgui-files")
+file(GLOB IMGUI_SOURCES
+    ${IMGUI_FILE_DIR}/*.h
+    ${IMGUI_FILE_DIR}/*.cpp
     )
-source_group("src" FILES  ${SOURCES_PROJECT})
 
+#############################################################
+################### PROJECT SOURCES #########################
+#############################################################
+list(APPEND PROJECT_SOURCES
+    src/main.cpp
+    ${IMGUI_SOURCES}
+    )
+source_group("src" FILES  ${PROJECT_SOURCES})
+source_group("imgui" FILES ${IMGUI_SOURCES})
+
+#############################################################
+################### PROJECT SHADERS #########################
+#############################################################
 # TODO: specify them so cmake knows to re-run if we add one
 # glob can't detect
-file(GLOB_RECURSE SHADERS_PROJECT ./src/shaders/*.cpp)
+file(GLOB_RECURSE SHADERS_PROJECT ./src/shaders/*.glsl)
 source_group("shaders" FILES  ${SHADERS_PROJECT})
 
-add_executable(${PROJECT_NAME} ${SOURCES_PROJECT})
-
+#############################################################
+################## PROJECT EXE/LINK #########################
+#############################################################
+add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
 # NOTE: for explictly setting dlls includes see (definitely the first one):
 # https://stackoverflow.com/questions/58870951/how-do-i-link-a-library-using-cmake?noredirect=1&lq=1
 # https://stackoverflow.com/questions/54039533/cmake-define-dlls-directory-or-files-for-a-generated-project?noredirect=1&lq=1
 
-# For GLEW: see https://github.com/sho3la/ShaderPlusPlus/tree/master/glew
-# Although, consider using glad or glew (its all the same)
-# https://github.com/Dav1dde/glad.git
-# https://github.com/skaslev/gl3w.git
-
 target_link_libraries(${PROJECT_NAME}
     ${OPENGL_LIBRARIES}
-    # glad
-    # glfw
-    # glm
-    # # NOTE: in gli CMakeLists.txt I commented the add_subdirectory(test)
-    # gli
-    # assimp
+    glad
+    glfw
+    glm
+    assimp # NOTE: consider using the precompiled stuff (simliar to what freetype is doing) since this thing is large
     soil2
     freetype # Using the old raw stuff since interface changed
+    # gli # NOTE: in gli CMakeLists.txt I commented the add_subdirectory(test)
     )
-
-# # TODO: figure out how to make this vis to a parent or global or export target or whatever
-# set(SOIL2_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/dependencies/soil2/src/SOIL2)
-# cmake_print_variables(SOIL2_INCLUDE_DIRS)
 
 # NOTE: don't need to include in some cases if the libs CMakeLists was done correctly
 target_include_directories(${PROJECT_NAME}
     PRIVATE
-        # # NOTE: opengl has no headers, that's what glew, gl3w, glad are for.
-        # glad
-        # glfw
-        # glm
+        # NOTE: opengl has no headers, that's what glew, gl3w, glad are for.
+        glad
+        glfw
+        glm
+        assimp
         # gli
-        # assimp
     )
 
 # Copy some dll,lib to the build dirs
@@ -93,4 +103,3 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different ${FREETYPE_LIB} $<TARGET_FILE_DIR:${PROJECT_NAME}>
     COMMAND ${CMAKE_COMMAND} -E copy_if_different ${FREETYPE_DLL} $<TARGET_FILE_DIR:${PROJECT_NAME}>
     )
-
