@@ -40,7 +40,7 @@ set_target_properties(freetype PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${CMAKE
 set_target_properties(freetype PROPERTIES IMPORTED_LOCATION ${FREETYPE_DLL})
 set_target_properties(freetype PROPERTIES IMPORTED_IMPLIB ${FREETYPE_LIB})
 
-set(SOIL2_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/SOIL2/src")
+set(SOIL2_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/soil2/src")
 file(GLOB_RECURSE SOURCES_SOIL2
     ${SOIL2_SOURCE_DIR}/common/*.cpp
     ${SOIL2_SOURCE_DIR}/common/*.hpp
@@ -48,8 +48,8 @@ file(GLOB_RECURSE SOURCES_SOIL2
     ${SOIL2_SOURCE_DIR}/SOIL2/*.h
     )
 # NOTE: MUST be STATIC
-add_library(SOIL2
+add_library(soil2
     STATIC ${SOURCES_SOIL2}
 )
 # NOTE: This will allow you to just put SOIL2 in the link library list and not have to put it in the include list
-set_target_properties(SOIL2 PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${SOIL2_SOURCE_DIR}/SOIL2")
+set_target_properties(soil2 PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${SOIL2_SOURCE_DIR}/SOIL2")

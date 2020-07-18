@@ -67,12 +67,12 @@ target_link_libraries(${PROJECT_NAME}
     # # NOTE: in gli CMakeLists.txt I commented the add_subdirectory(test)
     # gli
     # assimp
-    SOIL2
+    soil2
     freetype # Using the old raw stuff since interface changed
     )
 
 # # TODO: figure out how to make this vis to a parent or global or export target or whatever
-# set(SOIL2_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/dependencies/SOIL2/src/SOIL2)
+# set(SOIL2_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/dependencies/soil2/src/SOIL2)
 # cmake_print_variables(SOIL2_INCLUDE_DIRS)
 
 # NOTE: don't need to include in some cases if the libs CMakeLists was done correctly
